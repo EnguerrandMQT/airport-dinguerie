@@ -1,15 +1,24 @@
 #include "Plane.hpp"
 
 
-class Airport 
-{
-	private:
-		vector<Plane*> planes;
-		Point2D location;
+class Airport {
+private:
+  thread t_;
 
-	public:
-		Airport();
-		void addPlane(Plane *plane);
-		void showPlane();
+  vector<Plane *> planes;
+  Point2D location;
+
+  bool runwayAvailable = true;
+
+  bool stop_thread;
+
+public:
+  Airport();
+  void addPlane(Plane *plane);
+  void showPlane();
+
+  ~Airport();
 };
 
+class Aiport;
+void threadAirport(bool &stop_thread);

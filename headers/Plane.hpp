@@ -1,55 +1,52 @@
 #include "Function.hpp"
 
-class Plane;
-void flyPlane(Plane &plane, bool &stop_thread);
-class Plane
-{
-    private:
-        thread t_;
+//class Plane;
 
-        string identification;
-        int alt;
-        Point2D pos;
-        Point2D nextPt;
+class Plane {
+private:
+  thread t_;
 
-        bool stop_thread = false;
+  string identification;
+  int alt;
+  Point2D pos;
+  Point2D nextPt;
 
-        //int fuel
-        //int speed;
-        //bool emergency;
+  bool stop_thread = false;
 
+  bool autoLand = false;
+  // int fuel
+  // int speed;
+  // bool emergency;
 
-    public:
-        Plane();
+public:
+  Plane();
 
-        //Plane(string &name);
-        Point2D getPos();
-        void stopThread();
-        void joinWaitCircuit();
-        void rotate();
+  // Plane(string &name);
+  Point2D getPos();
+  void joinWaitCircuit();
+  void rotate();
 
-            void land();
-    void driveToPark();
-    void driveToTO();
-    void takeoff();
+  void land();
+  void driveToPark();
+  void driveToTO();
+  void takeoff();
 
+  void rdnTIME();
 
-    void rdnTIME();
-        
-        Point2D obtainNextPt(Point2D &actual);
-        void position();
-        string getName();
-    void operator=(Point2D& pt);
+  Point2D obtainNextPt(Point2D &actual);
+  void position();
+  string getName();
 
-    bool operator==(Point2D& pt1);
-    friend ostream & operator << (ostream &out, Plane &c);
+  void setlandStatus(bool status);
 
-        ~Plane();
+  void operator=(Point2D &pt);
+  bool operator==(Point2D &pt1);
+  friend ostream &operator<<(ostream &out, Plane &c);
 
+  void flyPlane(Plane &plane, bool &stop_thread);
+  ~Plane();
 };
 
-//void flyPlane(Plane &plane);
-
+// void flyPlane(Plane &plane);
 
 void add_plane_sometimes();
-

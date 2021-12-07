@@ -19,9 +19,9 @@ Point2D LandCircuit[2] = {Point2D(-50, 0), Point2D(50, 0)};
   }
 } */
 
-void flyPlane(Plane &planeq, bool &stop_thread) {
+void Plane::flyPlane(Plane &planeq, bool &stop_thread) {
   planeq.joinWaitCircuit();
-
+  if(autoLand == false){}
   bool landed = false;
   bool flying = true; // bool pour l'état de l'avion
 
@@ -75,7 +75,7 @@ Plane::Plane() {
 
   pos = Point2D(random(-300, 300), random(-300, 300));
 
-  t_ = thread(flyPlane, ref(*this), ref(stop_thread));
+  t_ = thread(this.flyPlane, ref(*this), ref(stop_thread));
 }
 
 void Plane::rdnTIME() {
@@ -231,7 +231,15 @@ void Plane::position() {
   cout << "alt = " << alt << "ft" << endl;
 }
 
-void Plane::stopThread() { stop_thread = false; }
+void Plane::setlandStatus(bool status){
+  autoLand = status;
+}
+
+
+
+
+
+
 
 
 void Plane::operator=(Point2D &pt) { pos.setXY(pt.getX(), pt.getY()); }

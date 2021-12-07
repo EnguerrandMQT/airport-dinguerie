@@ -3,8 +3,10 @@
 
 
 
-int random(int val1, int val2)
+int random(int val1, int val2) 
+
 {
+cout << endl;
     if (val1 > val2)
         swap(val1, val2);
     return (rand() % ((val2 - val1) + 1)) + val1;

@@ -8,7 +8,9 @@ void threadAirport(bool &stop_thread) {
   }
 }
 
-Airport::Airport() {}
+Airport::Airport() {
+  location = Point2D(random(0,500),random(0,500));
+}
 
 void Airport::addPlane(Plane *plane) {
   airport_mutex.lock();
@@ -19,8 +21,11 @@ void Airport::addPlane(Plane *plane) {
 void Airport::showPlane() {
   for (auto &pl : planes) {
     cout << pl->getName() << endl;
+    
   }
+  
 }
+Point2D Airport::getPos(){return location;}
 
 Airport::~Airport() {
   stop_thread = true;

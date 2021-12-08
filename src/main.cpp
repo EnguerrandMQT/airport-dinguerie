@@ -2,7 +2,7 @@
 
 #define NB_OF_PLANES 5
 
-void showPlane(vector<Plane *> planes) {
+void showPlane(vector<Plane *> planes, vector<Airport *> airports) {
   RenderWindow window(VideoMode(600, 600), "Ca marche !");
 
   //! background
@@ -15,7 +15,6 @@ void showPlane(vector<Plane *> planes) {
   //! runway
   RectangleShape runway(Vector2f(100, 5));
   runway.setFillColor(Color::White);
-  runway.setPosition(250, 305);
 
   //! plane
   CircleShape plane(8);
@@ -30,7 +29,6 @@ void showPlane(vector<Plane *> planes) {
   // tag.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
   //! draw
-  // while (!stop_thread) {
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
@@ -39,15 +37,22 @@ void showPlane(vector<Plane *> planes) {
       }
     }
     window.clear();
-    window.draw(sprite);
-    window.draw(runway);
+    window.draw(sprite); // background
+
+    for (auto &ap : airports) {
+      pos = ap->getPos();
+      runway.setPosition(pos.getX()-50, pos.getY());
+      window.draw(runway);
+      //ap.
+
+    }
     for (auto &pl : planes) {
       pos = pl->getPos();
-      plane.setPosition(pos.getX() + 300, pos.getY() + 300);
+      plane.setPosition(pos.getX(), pos.getY());
       window.draw(plane);
 
       tag.setString(pl->getName());
-      tag.setPosition(pos.getX() +300, pos.getY()+300);
+      tag.setPosition(pos.getX(), pos.getY());
       window.draw(tag);
     }
     window.display();
@@ -57,21 +62,26 @@ void showPlane(vector<Plane *> planes) {
 int main(void) {
 
   srand(time(NULL));
-  Airport CDG = Airport();
   // Waiting_planes waiting_planes;
 
   // vector<unique_ptr<Plane>> planes;
   vector<Plane *> planes;
+  vector<Airport *> airports;
+  Airport *CDG = new Airport();
+  Airport *TLS = new Airport();
+
+  airports.push_back(CDG);
+  airports.push_back(TLS);
 
   for (int i = 0; i < NB_OF_PLANES; i++) {
     // auto plane = make_unique<Plane>();
-    Plane *plane = new Plane();
+    Plane *plane = new Plane(ref(CDG));
 
     planes.push_back(plane);
-    CDG.addPlane(plane);
+    CDG->addPlane(plane);
   }
 
-  thread show_thread(showPlane, ref(planes));
+  thread show_thread(showPlane, ref(planes), ref(airports));
 
   while (1) {
     string i;
@@ -82,7 +92,7 @@ int main(void) {
   }
 
   cout << "Avions dans l'aéroport :" << endl;
-  CDG.showPlane();
+  CDG->showPlane();
 
   show_thread.join();
   return 0;

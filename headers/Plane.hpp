@@ -1,6 +1,8 @@
 #include "Function.hpp"
 
-//class Plane;
+class Airport;
+class Plane;
+void flyPlane(Plane &plane, bool &stop_thread);
 
 class Plane {
 private:
@@ -10,6 +12,7 @@ private:
   int alt;
   Point2D pos;
   Point2D nextPt;
+  Point2D aiportPos;
 
   bool stop_thread = false;
 
@@ -19,9 +22,17 @@ private:
   // bool emergency;
 
 public:
-  Plane();
-
+  Plane(Airport* airport);
   // Plane(string &name);
+
+  bool getAutoLand();
+  void setAutoLand(bool status);
+
+
+
+  Point2D getAirportPos();
+  void setAirportPos(Point2D airport);
+  
   Point2D getPos();
   void joinWaitCircuit();
   void rotate();
@@ -37,13 +48,10 @@ public:
   void position();
   string getName();
 
-  void setlandStatus(bool status);
-
   void operator=(Point2D &pt);
   bool operator==(Point2D &pt1);
   friend ostream &operator<<(ostream &out, Plane &c);
 
-  void flyPlane(Plane &plane, bool &stop_thread);
   ~Plane();
 };
 

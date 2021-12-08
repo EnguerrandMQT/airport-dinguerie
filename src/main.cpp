@@ -2,7 +2,7 @@
 //#include <SFML/Graphics/Texture.hpp>
 
 #define NB_OF_PLANES 5
-
+#define NB_OF_AIRPORT 2
 /*void showPlane(vector<unique_ptr<Plane>> &planes) {
   RenderWindow window(VideoMode(600, 600), "Ca marche !");
 
@@ -43,15 +43,26 @@
 int main(void) {
 
   srand(time(NULL));
-  Airport CDG = Airport();
   // Waiting_planes waiting_planes;
 
-  vector<unique_ptr<Plane>> planes;
+  // vector<unique_ptr<Plane>> planes;
+  vector<Plane *> planes;
+  vector<Airport *> airports;
+  Airport *CDG = new Airport();
+  Airport *TLS = new Airport();
+
+  airports.push_back(CDG);
+  airports.push_back(TLS);
 
   for (int i = 0; i < NB_OF_PLANES; i++) {
-    planes.push_back(make_unique<Plane>());
+    // auto plane = make_unique<Plane>();
+    Plane *plane = new Plane();
+
+    planes.push_back(plane);
+    CDG->addPlane(plane);
   }
-  //thread show_thread(showPlane, ref(planes));
+
+  //thread show_thread(showPlane, ref(planes), ref(airports));
 
   while (1) {
     string i;
@@ -62,9 +73,7 @@ int main(void) {
   }
 
   cout << "Avions dans l'aéroport :" << endl;
-  for (auto &pl : planes) {
-    cout << pl->getName() << endl;
-  }
+  //CDG->showPlane();
 
   //show_thread.join();
   return 0;

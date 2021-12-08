@@ -14,6 +14,8 @@ class Plane
 
         bool stop_thread = false;
 
+        bool autoland = false;
+
         //! bollene aeroport
         //bool land = false;
         //!
@@ -38,18 +40,20 @@ class Plane
         void takeoff();
 
 
-    void rdnTIME();
+        void rdnTIME();
         
         Point2D obtainNextPt(Point2D &actual);
         void position();
         string getName();
-    void operator=(Point2D& pt);
+        void operator=(Point2D& pt);
 
-    bool operator==(Point2D& pt1);
-    friend ostream & operator << (ostream &out, Plane &c);
+        bool operator==(Point2D& pt1);
+        friend ostream & operator << (ostream &out, Plane &c);
 
         ~Plane();
 
+        bool getAL();
+        void setAL(bool AL);
 };
 
 //void flyPlane(Plane &plane);

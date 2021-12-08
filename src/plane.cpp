@@ -33,18 +33,17 @@ void flyPlane(Plane &planeq, bool &stop_thread) {
   while (!stop_thread) {
     if (flying == true) {
       planeq.rotate();
-      counter += 1;
 
       if (planeq == PtLand) {
-        if (counter >= rdnTime) { // si l'avion est au point d'aterrissage
+        if (true == true) { // si l'avion est au point d'aterrissage
 
           planeq.land();
           flying = false; // aterrissage
           cout << "successfully landed !" << endl;
+          planeq.driveToPark();
           landed = true;
 
           if (landed == true && !stop_thread) {
-            planeq.driveToPark();
             planeq.rdnTIME(); // l'avion va se garer et resort aprés un temps
                               // aléatoire
             planeq.driveToTO();
@@ -262,4 +261,11 @@ void add_plane_sometimes(bool &stop) {
     Plane plane;
     // waiting_planes.add_a_plane(plane);
   }
+}
+
+void Plane::setAL(bool AL){
+  autoland = AL;
+}
+bool Plane::getAL(){
+  return autoland;
 }

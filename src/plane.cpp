@@ -1,5 +1,4 @@
 #include "../headers/Airport.hpp"
-#include <thread>
 
 std::mutex waiting_planes_mutex;
 std::mutex airport_mutex;

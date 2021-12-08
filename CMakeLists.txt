@@ -34,4 +34,5 @@ file(GLOB SOURCES "src/*.cpp")
 add_executable(airport ${SOURCES})
 
 target_compile_features(airport PUBLIC cxx_std_17)
+target_link_libraries(airport Threads::Threads)
 #target_link_libraries(airport sfml-graphics sfml-window Threads::Threads)

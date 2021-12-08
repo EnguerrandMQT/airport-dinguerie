@@ -1,7 +1,7 @@
 #include "Function.hpp"
 
 class Plane;
-void flyPlane(Plane &plane, bool &stop_thread);
+        void flyPlane(Plane &plane, bool &stop_thread);
 class Plane
 {
     private:
@@ -13,6 +13,10 @@ class Plane
         Point2D nextPt;
 
         bool stop_thread = false;
+
+        //! bollene aeroport
+        //bool land = false;
+        //!
 
         //int fuel
         //int speed;
@@ -28,10 +32,10 @@ class Plane
         void joinWaitCircuit();
         void rotate();
 
-            void land();
-    void driveToPark();
-    void driveToTO();
-    void takeoff();
+        void land();
+        void driveToPark();
+        void driveToTO();
+        void takeoff();
 
 
     void rdnTIME();

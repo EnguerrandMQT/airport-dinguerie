@@ -2,7 +2,7 @@
 
 
 Airport::Airport(){
-    
+    t_ = thread(bool &stop_thread);
 }
 
 void Airport::addPlane(Plane &plane)

@@ -11,14 +11,6 @@ Point2D LandCircuit[2] = {Point2D(-50, 0), Point2D(50, 0)};
 
 //!---------------------------------------------------------------------!//
 
-/* void flyPlane(Plane &plane, bool &stop_thread) {
-  plane.position();
-  plane.joinWaitCircuit();
-  while (!stop_thread) {
-    plane.rotate();
-  }
-} */
-
 void flyPlane(Plane &planeq, bool &stop_thread) {
   bool landed = false;
   bool flying = true; // bool pour l'état de l'avion
@@ -26,27 +18,28 @@ void flyPlane(Plane &planeq, bool &stop_thread) {
   Point2D PtLand(-100, 0); // Point d'aterrissage et de décollage
   Point2D PtTO(100, 0);
 
-  int rdnTime = random(50, 100); // counter et random pour crée un "timer"
+  int rdnTime = random(0, 400); // counter et random pour crée un "timer"
   int counter = 0; // pour l'aterrissage et evite d'utiliser un sleep
 
-  //planeq.joinWaitCircuit();
-  planeq.driveToTO();
-  planeq.takeoff();
+  // planeq.joinWaitCircuit();
+  // planeq.driveToTO();
+  // planeq.takeoff();
 
   planeq.joinWaitCircuit();
 
   while (!stop_thread) {
     if (flying == true) {
       planeq.rotate();
-       counter += 1;
+      counter += 1;
 
       if (planeq == PtLand) {
+
         if (counter >= rdnTime) { // si l'avion est au point d'aterrissage
-       // if (planeq.getAutoLand() == true) {
+                                  // if (planeq.getAutoLand() == true) {
 
           planeq.land();
           flying = false; // aterrissage
-          //cout << "successfully landed !" << endl;
+          // cout << "successfully landed !" << endl;
           landed = true;
 
           if (landed == true && !stop_thread) {
@@ -54,12 +47,12 @@ void flyPlane(Plane &planeq, bool &stop_thread) {
             planeq.rdnTIME(); // l'avion va se garer et resort aprés un temps
                               // aléatoire
             planeq.driveToTO();
-            //cout << "ready to TAKE OFF !" << endl;
+            // cout << "ready to TAKE OFF !" << endl;
 
             planeq.takeoff();
-            //cout << "je redemarreeeeeeeee" << endl; // l'avion redécolle
+            // cout << "je redemarreeeeeeeee" << endl; // l'avion redécolle
             landed = false;
-                  counter = 0;
+            counter = 0;
             flying = true;
 
             planeq.joinWaitCircuit();
@@ -72,14 +65,15 @@ void flyPlane(Plane &planeq, bool &stop_thread) {
 
 //!---------------------------------------------------------------------!//
 
-Plane::Plane(Airport* airport) {
+Plane::Plane(/* Airport* airport */) {
   identification = "AF" + to_string(random(100, 999));
-  alt = 0;
+  alt = 5000;
 
-  pos = airport->getPos();
-  pos.setX(pos.getY()-10);
+  // pos = airport->getPos();
+  // pos.setXY(0, pos.getY()-10);
+  // pos.setX(pos.getY()-10);
 
-  //pos = Point2D(random(-300, 300), random(-300, 300));
+  pos = Point2D(random(-300, 300), random(-300, 300));
 
   t_ = thread(flyPlane, ref(*this), ref(stop_thread));
 }
@@ -87,7 +81,7 @@ Plane::Plane(Airport* airport) {
 bool Plane::getAutoLand() { return autoLand; }
 void Plane::setAutoLand(bool status) { autoLand = status; }
 
-//Point2D Plane::getAirportPos() { return aiportPos; }
+// Point2D Plane::getAirportPos() { return aiportPos; }
 void Plane::setAirportPos(Point2D airport) { aiportPos = airport; }
 
 void Plane::rdnTIME() {
@@ -118,7 +112,7 @@ void Plane::joinWaitCircuit() {
     nextPt = WaitCircuit[0];
   else
     nextPt = WaitCircuit[tmp + 1];
-  position();
+  //position();
 }
 
 void Plane::rotate() {
@@ -129,22 +123,25 @@ void Plane::rotate() {
   Point2D aps = Point2D();
   equa = calcEquation(pos, nextPt);
 
-  // pos.print();
-  // nextPt.print();
-  // cout << "equa : ax = " << equa.ax << " || b = " << equa.b << endl;
-  // cout << "----------" << endl;
-
+  //? debug position rotate
+  /*
+    pos.print();
+    nextPt.print();
+    cout << "equa : ax = " << equa.ax << " || b = " << equa.b << endl;
+    cout << "----------" << endl;
+   */
   found = false;
   if (equa.ax == 0) {
-    if (pos.getY() < aiportPos.getY()) {
+    if (pos.getY() < 0 /* aiportPos.getY() */) {
       pos.setX(pos.getX() + 1);
     } else if (pos.getY() > aiportPos.getY()) {
       pos.setX(pos.getX() - 1);
     }
+    this_thread::sleep_for(0.05s);
   } else {
-    if (pos.getX() > aiportPos.getX()) {
+    if (pos.getX() > 0) {
 
-      if (pos.getY() >= aiportPos.getY()) {
+      if (pos.getY() >= 0) {
         float y = equa.ax * (pos.getX() - 1) + equa.b;
         pos.setXY(pos.getX() - 1, y);
       } else {
@@ -153,7 +150,7 @@ void Plane::rotate() {
       }
 
     } else {
-      if (pos.getY() > aiportPos.getY()) {
+      if (pos.getY() > 0) {
         float y = equa.ax * (pos.getX() - 1) + equa.b;
         pos.setXY(pos.getX() - 1, y);
       } else {
@@ -161,12 +158,12 @@ void Plane::rotate() {
         pos.setXY(pos.getX() + 1, y);
       }
     }
+    this_thread::sleep_for(0.1s);
   }
   if (nextPt.getX() == pos.getX()) {
     pos = nextPt;
     nextPt = obtainNextPt(nextPt);
   }
-  this_thread::sleep_for(0.1s);
 }
 
 Point2D Plane::obtainNextPt(Point2D &actual) {
@@ -186,53 +183,53 @@ void Plane::land() {
   float tmpX = pos.getX();
   float tmpalt = alt;
 
-  for (int i = 0; i < 10; i++) {
-    this_thread::sleep_for(0.2s);
-    pos.setX(pos.getX() - ((tmpX / 2) / 10));
-    alt = (alt - (tmpalt / 10));
-  //  position();
+  for (int i = 0; i < 100; i++) {
+    this_thread::sleep_for(0.02s);
+    pos.setX(pos.getX() - ((tmpX / 2) / 100));
+    alt = (alt - (tmpalt / 100));
+    //  position();
   }
 }
 
 void Plane::takeoff() {
   float tmpX = pos.getX();
 
-  for (int i = 0; i < 10; i++) {
-    this_thread::sleep_for(0.2s);
-    pos.setX(pos.getX() + (tmpX / 10));
-    alt = (alt + 5000 / 10);
-   // position();
+  for (int i = 0; i < 100; i++) {
+    this_thread::sleep_for(0.02s);
+    pos.setX(pos.getX() + (tmpX / 100));
+    alt = (alt + 5000 / 100);
+    // position();
   }
 }
 
 void Plane::driveToPark() {
   float tmpX = pos.getX();
-  float tmpY = pos.getY();
-  for (int i = 0; i < 10; i++) {
-    this_thread::sleep_for(0.5s);
-    pos.setX(pos.getX() - (tmpX / 10));
-  //  pos.print();
+  for (int i = 0; i < 100; i++) {
+    this_thread::sleep_for(0.06s);
+    pos.setX(pos.getX() - (tmpX / 100));
+    //  pos.print();
   }
   for (int j = 0; j < 10; j++) {
-    this_thread::sleep_for(0.5s);
+    this_thread::sleep_for(0.6s);
     pos.setY(pos.getY() - 1);
-  //  pos.print();
+    //  pos.print();
   }
 }
 
 void Plane::driveToTO() {
   float tmpX = pos.getX();
-  float tmpY = pos.getY();
   for (int i = 0; i < 10; i++) {
-    this_thread::sleep_for(0.5s);
+    this_thread::sleep_for(0.6s);
     pos.setY(pos.getY() + 1);
-  //  pos.print();
+    //  pos.print();
   }
 
-  for (int i = 0; i < 10; i++) {
-    this_thread::sleep_for(0.5s);
-    pos.setX(pos.getX() + 5);
-  //  pos.print();
+  for (int i = 0; i < 100; i++) {
+    this_thread::sleep_for(0.06s);
+    pos.setX(pos.getX() + (float)50/100);
+    //pos.setX(pos.getX() + (tmpX / 100));
+
+    //  pos.print();
   }
 }
 
@@ -240,9 +237,11 @@ string Plane::getName() { return identification; }
 
 void Plane::position() {
   cout << "Plane : " << identification << endl;
-  pos.print();
+  //pos.print();
   cout << "alt = " << alt << "ft" << endl;
 }
+
+int Plane::getAlt(){return alt;}
 
 void Plane::operator=(Point2D &pt) { pos.setXY(pt.getX(), pt.getY()); }
 
@@ -270,7 +269,7 @@ void add_plane_sometimes(bool &stop) {
   uniform_int_distribution<int> distribution(100, 800);
   while (stop == false) {
     // std::this_thread::sleep_for(3s);
-    //Plane plane;
+    // Plane plane;
     // waiting_planes.add_a_plane(plane);
   }
 }

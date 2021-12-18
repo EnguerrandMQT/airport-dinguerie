@@ -9,7 +9,7 @@ void threadAirport(bool &stop_thread) {
 }
 
 Airport::Airport() {
-  location = Point2D(random(0,500),random(0,500));
+  //location = Point2D(random(0,500),random(0,500));
 }
 
 void Airport::addPlane(Plane *plane) {

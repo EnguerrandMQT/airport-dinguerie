@@ -22,13 +22,13 @@ private:
   // bool emergency;
 
 public:
-  Plane(Airport* airport);
+  Plane(/* Airport* airport */);
   // Plane(string &name);
 
   bool getAutoLand();
   void setAutoLand(bool status);
 
-
+  int getAlt();
 
   Point2D getAirportPos();
   void setAirportPos(Point2D airport);

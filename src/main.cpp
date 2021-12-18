@@ -3,17 +3,18 @@
 #define NB_OF_PLANES 5
 
 void showPlane(vector<Plane *> planes, vector<Airport *> airports) {
-  RenderWindow window(VideoMode(600, 600), "Ca marche !");
+  RenderWindow window(VideoMode(600, 600), "Airport");
 
   //! background
   Texture texture;
-  texture.loadFromFile("../img/France.jpg");
+  texture.loadFromFile("../img/grass2.jpg");
   Sprite sprite;
   Vector2u size = texture.getSize();
   sprite.setTexture(texture);
 
   //! runway
   RectangleShape runway(Vector2f(100, 5));
+  runway.setPosition(260, 305);
   runway.setFillColor(Color::White);
 
   //! plane
@@ -23,10 +24,12 @@ void showPlane(vector<Plane *> planes, vector<Airport *> airports) {
 
   //! plane tag
   Text tag;
-  // tag.setFont(font);
-  tag.setCharacterSize(40);
+  Font font;
+  font.loadFromFile("../img/arial.ttf");
+  tag.setFont(font);
+  tag.setCharacterSize(15);
   tag.setFillColor(Color::White);
-  // tag.setStyle(sf::Text::Bold | sf::Text::Underlined);
+  //tag.setStyle(sf::Text::Bold);
 
   //! draw
   while (window.isOpen()) {
@@ -39,20 +42,20 @@ void showPlane(vector<Plane *> planes, vector<Airport *> airports) {
     window.clear();
     window.draw(sprite); // background
 
-    for (auto &ap : airports) {
+  /*   for (auto &ap : airports) {
       pos = ap->getPos();
       runway.setPosition(pos.getX()-50, pos.getY());
       window.draw(runway);
-      //ap.
 
-    }
+    } */
+    window.draw(runway);
     for (auto &pl : planes) {
       pos = pl->getPos();
-      plane.setPosition(pos.getX(), pos.getY());
+      plane.setPosition(pos.getX()+300, pos.getY()+300);
       window.draw(plane);
 
-      tag.setString(pl->getName());
-      tag.setPosition(pos.getX(), pos.getY());
+      tag.setString(pl->getName() + "\nAlt. : " + to_string(pl->getAlt()));
+      tag.setPosition(pl->getPos().getX() + 300, pl->getPos().getY() + 315);
       window.draw(tag);
     }
     window.display();
@@ -75,7 +78,7 @@ int main(void) {
 
   for (int i = 0; i < NB_OF_PLANES; i++) {
     // auto plane = make_unique<Plane>();
-    Plane *plane = new Plane(ref(CDG));
+    Plane *plane = new Plane(/* ref(CDG) */);
 
     planes.push_back(plane);
     CDG->addPlane(plane);
